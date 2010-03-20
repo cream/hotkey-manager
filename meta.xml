@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<meta>
+    <name>Hotkey Manager</name>
+    <comment>Managing global hotkeys...</comment>
+    <type>module</type>
+    <hash>8b6cac51c7df2e1e55c3bc1dd5ac3adc3ba82db6cb9f5a7163cbbc5c79ca4abe</hash>
+    <author>Sebastian Billaudelle</author>
+    <license>GPLv3</license>
+    <homepage>http://cream-project.org</homepage>
+    <mail>stein@cream-project.org</mail>
+</meta>
