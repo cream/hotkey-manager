@@ -48,7 +48,7 @@ class HotkeyBinding(gobject.GObject):
 
     def add_hotkey(self, keyval, modifier_mask):
 
-        if not keyval and not modifiers:
+        if not keyval and not modifier_mask:
             self.keycode = None
             self.modifier_mask = None
             return
@@ -57,7 +57,7 @@ class HotkeyBinding(gobject.GObject):
         modifier_mask = int(modifier_mask)
 
         self.hotkeys.append((keycode, modifier_mask))
-        self.root.grab_key(keycode, modifier_mask, True, X.GrabModeAsync, X.GrabModeSync)
+        self.root.grab_key(keycode, modifier_mask, True, X.GrabModeAsync, X.GrabModeAsync)
         self.display.flush()
 
 
@@ -83,12 +83,11 @@ class HotkeyBinding(gobject.GObject):
             try:
                 event = self.display.next_event()
                 if event.type == X.KeyPress:
-                    keyval = self.keymap.get_entries_for_keycode(event.detail)[0][0]
+                    keyval = self.display.keycode_to_keysym(event.detail, 0)
                     modifier_mask = event.state
                     gobject.idle_add(self.handler, keyval, modifier_mask)
-                self.display.allow_events(X.AsyncKeyboard, event.time)
             except:
-                self.display.allow_events(X.AsyncKeyboard, X.CurrentTime)
+                pass
 
 
     def listen(self):
