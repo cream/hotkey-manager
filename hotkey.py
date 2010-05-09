@@ -29,6 +29,8 @@ import cream
 import cream.ipc
 from cream.util import random_hash
 
+from cream.util import unique
+
 class HotkeyBinding(gobject.GObject):
     __gsignals__ = {
         'hotkey-activated': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_INT))
@@ -144,7 +146,13 @@ class HotkeyBroker(cream.ipc.Object):
         self.manager().set_hotkey(keyval, modifier_mask, self)
 
 
-class HotkeyManager(cream.Module, cream.ipc.Object):
+class HotkeyManagerMeta(cream.ipc.ObjectMeta, gobject.GObjectMeta):
+    pass
+
+
+class HotkeyManager(cream.Module, cream.ipc.Object, unique.UniqueApplication):
+
+    __metaclass__ = HotkeyManagerMeta
 
     def __init__(self):
 
@@ -153,6 +161,8 @@ class HotkeyManager(cream.Module, cream.ipc.Object):
             'org.cream.hotkeys',
             '/org/cream/hotkeys'
         )
+
+        unique.UniqueApplication.__init__(self, self.context.manifest['id'])
 
         self.hotkeys = {}
 
