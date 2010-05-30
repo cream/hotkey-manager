@@ -144,13 +144,7 @@ class HotkeyBroker(cream.ipc.Object):
         self.manager().set_hotkey(keyval, modifier_mask, self)
 
 
-class HotkeyManagerMeta(cream.ipc.ObjectMeta, gobject.GObjectMeta):
-    pass
-
-
 class HotkeyManager(cream.Module, cream.ipc.Object):
-
-    __metaclass__ = HotkeyManagerMeta
 
     def __init__(self):
 
