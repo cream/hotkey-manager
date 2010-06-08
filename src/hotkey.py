@@ -18,8 +18,9 @@
 
 import os
 
-from Xlib.display import Display
-from Xlib import X
+import ooxcb
+from ooxcb.protocol import xproto
+
 import gobject
 import gtk.gdk
 import thread
@@ -39,8 +40,8 @@ class HotkeyBinding(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self.keymap = gtk.gdk.keymap_get_default()
-        self.display = Display()
-        self.screen = self.display.screen()
+        self.display = ooxcb.connect()
+        self.screen = self.display.setup.roots[self.display.pref_screen]
         self.root = self.screen.root
 
         self.hotkeys = []
@@ -57,47 +58,52 @@ class HotkeyBinding(gobject.GObject):
         modifier_mask = int(modifier_mask)
 
         self.hotkeys.append((keycode, modifier_mask))
-        self.root.grab_key(keycode, modifier_mask, True, X.GrabModeAsync, X.GrabModeAsync)
+        self.root.grab_key(keycode, modifier_mask)
         self.display.flush()
 
 
     def ungrab(self):
 
         for keycode, modifier_mask in self.hotkeys:
-            self.root.ungrab_key (keycode, modifier_mask, self.root)
+            self.root.ungrab_key(keycode, modifier_mask)
+        self.display.flush()
 
 
     def handler(self, keyval, mask):
 
+        # TODO: still necessary with ooxcb?
         gtk.gdk.threads_enter()
         self.emit("hotkey-activated", keyval, mask)
         gtk.gdk.threads_leave()
         return False
 
 
-    def run (self):
+    def _ooxcb_callback(self, source, condition):
+        """
+            called when data from the x server is waiting. see `listen`.
+        """
 
-        self.running = True
-        wait_for_release = False
-        while self.running:
-            try:
-                event = self.display.next_event()
-                if event.type == X.KeyPress:
-                    keyval = self.display.keycode_to_keysym(event.detail, 0)
-                    modifier_mask = event.state
-                    gobject.idle_add(self.handler, keyval, modifier_mask)
-            except:
-                pass
-
+        while self.display.conn:
+            evt = self.display.poll_for_event()
+            if evt is None:
+                break
+            if isinstance(evt, xproto.KeyPressEvent):
+                keysym = self.display.keysyms.get_keysym(evt.detail, 0)
+                modifier_mask = evt.state
+                self.handler(keysym, modifier_mask)
+        # We sure want to be called again.
+        return True
 
     def listen(self):
 
-        thread.start_new_thread(self.run, ())
-
+        # integrate the ooxcb event handlers into the gobject mainloop.
+        gobject.io_add_watch(
+                self.display.get_file_descriptor(),
+                gobject.IO_IN,
+                self._ooxcb_callback)
 
     def stop (self):
 
-        self.running = False
         self.ungrab()
         self.display.close()
 
