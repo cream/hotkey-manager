@@ -116,14 +116,14 @@ class HotkeyBroker(cream.ipc.Object):
         }
 
     __ipc_signals__ = {
-        'hotkey_activated': ('s', 'org.cream.hotkeys.broker'),
+        'hotkey_activated': ('s', 'org.cream.Hotkeys.broker'),
         }
 
     def __init__(self, manager):
 
         cream.ipc.Object.__init__(self,
-            'org.cream.hotkeys',
-            '/org/cream/hotkeys/broker_{0}'.format(random_hash(bits=20))
+            'org.cream.Hotkeys',
+            '/org/cream/Hotkeys/broker_{0}'.format(random_hash(bits=20))
         )
 
         self.hotkeys = {}
@@ -138,7 +138,7 @@ class HotkeyBroker(cream.ipc.Object):
             self.emit_signal('hotkey_activated', self.hotkeys[(keyval, modifier_mask)][0])
 
 
-    @cream.ipc.method('ss', 'b', interface='org.cream.hotkeys.broker')
+    @cream.ipc.method('ss', 'b', interface='org.cream.Hotkeys.broker')
     def set_hotkey(self, action, hotkey):
 
         keyval, modifier_mask = gtk.accelerator_parse(hotkey)
