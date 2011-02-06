@@ -154,10 +154,10 @@ class HotkeyManager(cream.Module, cream.ipc.Object):
 
     def __init__(self):
 
-        cream.Module.__init__(self)
+        cream.Module.__init__(self, 'org.cream.Hotkeys')
         cream.ipc.Object.__init__(self,
-            'org.cream.hotkeys',
-            '/org/cream/hotkeys'
+            'org.cream.Hotkeys',
+            '/org/cream/Hotkeys'
         )
 
         self.hotkeys = {}
