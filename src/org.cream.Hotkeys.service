@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.cream.Hotkeys
+Exec=/usr/bin/hotkey
