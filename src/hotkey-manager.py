@@ -122,8 +122,8 @@ class HotkeyBroker(cream.ipc.Object):
     def __init__(self, manager):
 
         cream.ipc.Object.__init__(self,
-            'org.cream.Hotkeys',
-            '/org/cream/Hotkeys/broker_{0}'.format(random_hash(bits=20))
+            'org.cream.HotkeyManager',
+            '/org/cream/HotkeyManager/broker_{0}'.format(random_hash(bits=20))
         )
 
         self.hotkeys = {}
@@ -156,8 +156,8 @@ class HotkeyManager(cream.Module, cream.ipc.Object):
 
         cream.Module.__init__(self, 'org.cream.Hotkeys')
         cream.ipc.Object.__init__(self,
-            'org.cream.Hotkeys',
-            '/org/cream/Hotkeys'
+            'org.cream.HotkeyManager',
+            '/org/cream/HotkeyManager'
         )
 
         self.hotkeys = {}

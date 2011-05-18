@@ -14,19 +14,19 @@ class post_install(install_scripts):
             move(i, n)
             print "moving '{0}' to '{1}'".format(i, n)
 
-ID = 'org.cream.Hotkeys'
+ID = 'org.cream.HotkeyManager'
 
 data_files = [
     ('share/cream/{0}'.format(ID), ['src/manifest.xml']),
-    ('share/dbus-1/services', ['src/org.cream.Hotkeys.service'])
+    ('share/dbus-1/services', ['src/org.cream.HotkeyManager.service'])
 ]
 
 setup(
     name = 'hotkey-manager',
-    version = '0.0.5',
+    version = '0.1.1',
     author = 'The Cream Project (http://cream-project.org)',
     url = 'http://github.com/cream/hotkey-manager',
     data_files = data_files,
     cmdclass={'install_scripts': post_install},
-    scripts = ['src/hotkey.py']
+    scripts = ['src/hotkey-manager.py']
 )
