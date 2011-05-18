@@ -138,7 +138,7 @@ class HotkeyBroker(cream.ipc.Object):
             self.emit_signal('hotkey_activated', self.hotkeys[(keyval, modifier_mask)][0])
 
 
-    @cream.ipc.method('ss', 'b', interface='org.cream.Hotkeys.broker')
+    @cream.ipc.method('ss', 'b', interface='org.cream.HotkeyManager.broker')
     def set_hotkey(self, action, hotkey):
 
         keyval, modifier_mask = gtk.accelerator_parse(hotkey)
