@@ -116,7 +116,7 @@ class HotkeyBroker(cream.ipc.Object):
         }
 
     __ipc_signals__ = {
-        'hotkey_activated': ('s', 'org.cream.Hotkeys.broker'),
+        'hotkey_activated': ('s', 'org.cream.HotkeyManager.broker'),
         }
 
     def __init__(self, manager):
